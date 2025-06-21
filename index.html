@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Flippy Glasses</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #a0d8ef url('gözlükler.png') repeat;
+            background-size: 80px;
+        }
+        #startScreen {
+            text-align: center;
+            margin-top: 30px;
+        }
+        #startScreen h1 { font-size: 30px; margin: 10px; }
+        #startScreen p { margin: 4px; font-size: 16px; }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        canvas {
+            display: none;
+            border: 2px solid #000;
+            background-color: #87ceeb;
+        }
+    </style>
+</head>
+<body>
+    <div id="startScreen">
+        <h1>Flippy Glasses</h1>
+        <p>Uğur Turhan – Optisyenlik İ.Ö – 240118032</p>
+        <p>Ataşehir Adıgüzel Meslek Yüksekokulu</p>
+        <button onclick="startGame()">Oyuna Başla</button>
+        <audio autoplay loop id="ambient">
+            <source src="ambient.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    <canvas id="gameCanvas" width="360" height="480"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let playing = false;
+        let y = 200;
+        let gravity = 0.5;
+        let lift = -8;
+        let velocity = 0;
+
+        function startGame() {
+            document.getElementById("startScreen").style.display = "none";
+            canvas.style.display = "block";
+            document.getElementById("ambient").pause();
+            playing = true;
+            requestAnimationFrame(update);
+        }
+
+        function update() {
+            if (!playing) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            velocity += gravity;
+            y += velocity;
+
+            if (y + 24 > canvas.height || y < 0) {
+                alert("Cam kırıldı!");
+                playing = false;
+                return;
+            }
+
+            ctx.fillStyle = "#222";
+            ctx.beginPath();
+            ctx.arc(80, y, 24, 0, Math.PI * 2);
+            ctx.stroke();
+
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener("click", () => {
+            if (playing) velocity = lift;
+        });
+    </script>
+</body>
+</html>
